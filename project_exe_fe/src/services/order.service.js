@@ -21,6 +21,7 @@ export const getOrder = (id, form) => {
 }
 export const createOrder = async (order, navigate) => {
     try {
+        await axios.post(API_PATH.order, order)
         const emailData = {
             to: order.email,
             subject: 'Xác nhận đơn hàng',
