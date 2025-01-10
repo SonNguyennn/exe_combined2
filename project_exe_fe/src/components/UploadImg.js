@@ -54,7 +54,7 @@ const UploadImg = ({ onFileListChange, filesApi }) => {
     return (
         <>
             <Upload
-                action={'http://localhost:3000/'}
+                action={'https://exe-combined2-1.onrender.com/'}
                 listType="picture-card"
                 defaultFileList={fileList}
                 fileList={fileList}

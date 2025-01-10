@@ -28,7 +28,7 @@ const ShoesTable = () => {
       dataIndex: "shoesImg",
       render: (imgUrl) => {
         return (
-          <Image width={150} src={"http://localhost:3000" + imgUrl}></Image>
+          <Image width={150} src={"https://exe-combined2-1.onrender.com" + imgUrl}></Image>
         );
       },
       width: "20%",

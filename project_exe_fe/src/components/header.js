@@ -303,7 +303,7 @@ const Header = () => {
                         }}
                         avatar={
                           <img
-                            src={"http://localhost:3000" + item.tshirtImg}
+                            src={"https://exe-combined2-1.onrender.com" + item.tshirtImg}
                             alt=""
                           />
                         }
@@ -346,7 +346,7 @@ const Header = () => {
                         }}
                         avatar={
                           <img
-                            src={"http://localhost:3000" + item.pantImg}
+                            src={"https://exe-combined2-1.onrender.com" + item.pantImg}
                             alt=""
                           />
                         }
@@ -387,7 +387,7 @@ const Header = () => {
                         }}
                         avatar={
                           <img
-                            src={"http://localhost:3000" + item.shoesImg}
+                            src={"https://exe-combined2-1.onrender.com" + item.shoesImg}
                             alt=""
                           />
                         }
@@ -429,7 +429,7 @@ const Header = () => {
                         }}
                         avatar={
                           <img
-                            src={"http://localhost:3000" + item.accessoryImg}
+                            src={"https://exe-combined2-1.onrender.com" + item.accessoryImg}
                             alt=""
                           />
                         }

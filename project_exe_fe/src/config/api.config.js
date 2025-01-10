@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:3000/";
+const baseURL = "https://exe-combined2-1.onrender.com/";
 
 export const API_PATH = {
   user: baseURL + "users",
