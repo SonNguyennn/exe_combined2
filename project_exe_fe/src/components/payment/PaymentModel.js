@@ -1,16 +1,17 @@
 import { MoneyCollectTwoTone } from '@ant-design/icons';
-import { Button, Card, Checkbox, Col, Form, Image, Input, List, Row, Typography, message } from 'antd';
+import { Button, Card, Checkbox, Col, Form, Image, Input, List, Row, Typography, message, Modal } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import { deleteCart, getListCart } from '../../services/cart.service';
 import LocationSelector from './LocationSelector';
 import { useLocation, useNavigate } from 'react-router';
 import { createOrder } from '../../services/order.service';
-import { createPayment, createQr } from '../../services/payment.service';
+import { createPayment } from '../../services/payment.service';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { API_PATH, PATH } from '../../config/api.config';
 import { layout } from '../../config/style.config';
+import banking from '../../assets/images/banking.jpg';
 
 const { Text } = Typography;
 
@@ -35,6 +36,14 @@ const PaymentModel = () => {
     const [isCOD, setIsCOD] = useState(false);
     const [isVNPay, setIsVNPay] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
 
     // const fetchShippingMethods = (city, district, ward) => {
     //     if (city && district && ward) {
@@ -137,11 +146,11 @@ const PaymentModel = () => {
             voucherTotal,
             cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.quantity, accessory_id: cart.accessory_id, shoes_size_detail_id: cart.shoes_size_detail_id, pant_shirt_size_detail_id: cart.pant_shirt_size_detail_id }))
         };
+        console.log(initialValues.email);
         const order = {
             account_id: initialValues.userId,
-            name: values.name,
-            email: values.email,
             phone: values.phone,
+            email: initialValues.email,
             address: selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + values.address,
             total_price: values.voucherTotal,
             orderItems: values.cartItems.map(item => ({
@@ -155,10 +164,36 @@ const PaymentModel = () => {
             deleteCart(initialValues.userId);
             createOrder(order, navigate);
         } else if (isVNPay) {
-            createPayment(voucherTotal, bankCode, language, name, selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + address, phone);
-            // createQr('39792523979', 'NGUYEN THANH SON', 'TPBANK', '10000', 'Thanh toán đơn hàng Dynamix')
+            // createPayment(voucherTotal, bankCode, language, name, selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + address, phone);
+            showModal();
         }
     };
+    const handleOK = () => {
+        const values = {
+            name,
+            phone,
+            email,
+            address,
+            voucherTotal,
+            cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.quantity, accessory_id: cart.accessory_id, shoes_size_detail_id: cart.shoes_size_detail_id, pant_shirt_size_detail_id: cart.pant_shirt_size_detail_id }))
+        };
+        console.log(initialValues.email);
+        const order = {
+            account_id: initialValues.userId,
+            phone: values.phone,
+            email: initialValues.email,
+            address: selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + values.address,
+            total_price: values.voucherTotal,
+            orderItems: values.cartItems.map(item => ({
+                accessory_id: item.accessory_id,
+                quantity: item.quantity,
+                shoes_size_detail_id: item.shoes_size_detail_id,
+                pant_shirt_size_detail_id: item.pant_shirt_size_detail_id,
+            })),
+        };
+        deleteCart(initialValues.userId);
+        createOrder(order, navigate);
+    }
     useEffect(() => {
         const fetchData = async () => {
             if (initialValues.userId) {
@@ -330,7 +365,7 @@ const PaymentModel = () => {
                                         alt='VNPay'
                                         style={{ width: '24px', height: '24px', marginRight: '8px' }}
                                     />
-                                    Thanh toán bằng ví VNPay
+                                    Thanh toán Online
                                 </Title>
                             </Checkbox>
                         </Card>
@@ -406,6 +441,19 @@ const PaymentModel = () => {
                     </Row>
                 </Col>
             </Row>
+            <>
+                <Modal title="Thanh toán bằng QR" visible={isModalVisible} onCancel={handleCancel} footer={null}>
+                    <div style={{ textAlign: 'center' }}>
+                        <img src={banking} alt="QR Code" style={{ width: 400, height: 400 }} />
+                        <p style={{ marginTop: 10, fontWeight: 'bold' }}>Vui lòng chuyển đúng số tiền</p>
+                        <p>Tổng tiền: {voucherTotal} VND</p>
+                        <Button type="primary" onClick={handleOK} style={{ marginRight: 10 }}>
+                            Xác nhận thanh toán
+                        </Button>
+                        <Button onClick={handleCancel}>Hủy bỏ</Button>
+                    </div>
+                </Modal>
+            </>
         </div>
     );
 };
